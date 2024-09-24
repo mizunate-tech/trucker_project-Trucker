@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(height: 25),
-          // profile stats -> post / followers / following
+          // profile stats -> post
           MyProfileStats(
             postCount: allUserPosts.length,
           ),
