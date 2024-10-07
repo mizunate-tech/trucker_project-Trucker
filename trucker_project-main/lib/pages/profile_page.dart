@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:trucker_project/components/models/user.dart';
 import 'package:trucker_project/components/my_bio_box.dart';
@@ -6,6 +9,7 @@ import 'package:trucker_project/components/my_input_alert_box.dart';
 import 'package:trucker_project/components/my_post_tile.dart';
 import 'package:trucker_project/components/my_profile_stats.dart';
 import 'package:trucker_project/helper/navigate_pages.dart';
+import 'package:trucker_project/pages/select_profile_picture.dart';
 import 'package:trucker_project/services/auth/auth_service.dart';
 import 'package:trucker_project/services/database/database_provider.dart';
 
@@ -29,6 +33,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Uint8List? image;
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+
+    setState(() {
+      image = img;
+    });
+  }
+
 //providers
   late final listeningProvider = Provider.of<DatabaseProvider>(context);
   late final databaseProvider =
@@ -120,18 +134,42 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 25),
           // profile picture
           Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(25)),
-              padding: const EdgeInsets.all(25),
-              child: Icon(
-                Icons.person,
-                size: 72,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+            child: Stack(
+              children: [
+                image != null
+                    ? CircleAvatar(
+                        radius: 64,
+                        backgroundImage: MemoryImage(image!),
+                      )
+                    : const CircleAvatar(
+                        radius: 64,
+                        backgroundImage: NetworkImage(
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUuR6lY1HPFS4Q_R2A5r70ECdchXmR_n1b8g&s'),
+                      ),
+                Positioned(
+                  child: IconButton(
+                    onPressed: selectImage,
+                    icon: const Icon(Icons.add_a_photo),
+                  ),
+                  bottom: -10,
+                  left: 80,
+                )
+              ],
             ),
           ),
+
+          // child: Container(
+          //   decoration: BoxDecoration(
+          //       color: Theme.of(context).colorScheme.secondary,
+          //       borderRadius: BorderRadius.circular(25)),
+          //   padding: const EdgeInsets.all(25),
+          //   child: Icon(
+          //     Icons.add,
+          //     size: 12,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          // ),
+
           const SizedBox(height: 25),
           // profile stats -> post
           MyProfileStats(

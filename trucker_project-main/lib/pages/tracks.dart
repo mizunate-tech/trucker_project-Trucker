@@ -11,7 +11,7 @@ class Tracks extends StatefulWidget {
 class _TracksState extends State<Tracks> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: const Center(child: Text("MAP HERE")),
       drawer: MyDrawer(),
       appBar: AppBar(
@@ -24,11 +24,6 @@ class _TracksState extends State<Tracks> {
         ),
         foregroundColor: Theme.of(context).colorScheme.primary,
       ),
-      
     );
-    
   }
-
-  
 }
-
